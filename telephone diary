@@ -1,0 +1,86 @@
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+
+
+void display(FILE *fp){
+  char name[150];
+  char number[100];
+  int n=1;
+  printf("SNo. NAME NUMBER\n--------------------\n");
+  while( fscanf(fp,"%s %s",name,number) != EOF ){
+	printf("%d. %s : %s\n",n,name,number);
+	n++;
+  }
+  printf("--END OF FILE--\n\n");
+  fseek(fp,0,SEEK_SET);
+
+}
+
+
+void search(FILE *fp){
+  char name[15];
+  char number[100];
+  char input[15];
+  printf("Enter Name to search : ");
+  scanf("%s",input);
+  while( fscanf(fp,"%s %s",name,number) != EOF){
+    if(strcmp(name,input) == 0){
+      printf("CONTACT FOUND : %s %s\n\n",name,number);
+      fseek(fp,0,SEEK_SET);
+      return;
+    }
+  }
+  printf("--CONTACT NOT FOUND--\n\n");
+  fseek(fp,0,SEEK_SET);
+
+}
+
+void add(FILE *fp){
+  fseek(fp,0,SEEK_END);
+  char name[15];
+  char number[100];
+  printf("Enter Name : ");
+  scanf("%s",name);
+  printf("Enter Number : ");
+  scanf("%s",number);
+  fseek(fp,0,SEEK_END);
+  fprintf(fp,"%s %s\n",name,number);
+  printf("--Contact Added--\n\n");
+  fseek(fp,0,SEEK_SET);
+}
+
+
+int main(){
+  FILE *fp;
+  fp = fopen("data.txt","r+");
+  printf("PHONE BOOK MENU\n--------------");
+  printf("PHONE BOOK LOADED\n");
+  while(1){
+	printf("1. Display Contacts\n");
+	printf("2. Add Contacts\n");
+	printf("3. Search Contacts\n");
+    printf("4. Exit\n");
+    printf(">> ");
+	int option;
+	scanf("%d",&option);
+	switch(option){
+	  case 1:
+		display(fp);
+		break;
+	  case 2:
+		add(fp);
+		break;
+	  case 3:
+		search(fp);
+		break;
+      case 4:
+        fclose(fp);
+        return 0;
+        break;
+	  default:
+		printf("Invalid option\n");
+	}
+
+  }
+}
